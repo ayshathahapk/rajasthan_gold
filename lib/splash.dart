@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../main.dart';
-import 'bottompages/bottompage.dart';
+import '../main.dart';
+import 'home/allscreen.dart';
 
 
 class Splash extends StatefulWidget {
@@ -20,7 +20,7 @@ class _SplashState extends State<Splash> {
       Timer(Duration(seconds: 2), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Bottom()),
+          MaterialPageRoute(builder: (context) => AllScreen()),
         );
       });
     });
