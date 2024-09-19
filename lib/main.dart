@@ -1,32 +1,41 @@
-import 'package:flutter/foundation.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
-import 'splash.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rajasthan_gold/splash.dart';
+import 'Core/Utils/notification service.dart';
+import 'Core/Utils/size_utils.dart';
+// import 'firebase_options.dart';
+// import 'firebase_options.dart';
 
 var height;
 var width;
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel',
+  'High Importance Notifications',
+  importance: Importance.high,
+);
 final localhostServer = InAppLocalhostServer(documentRoot: 'assets');
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  try {
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
-    }
-
-    if (!kIsWeb) {
-      await localhostServer.start();
-    }
-  } catch (e, stackTrace) {
-    if (kDebugMode) {
-      print('Error during initialization: $e');
-      print(stackTrace);
-    }
-  }
-
-  runApp(const MyApp());
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  //
+  // FirebaseMessaging.instance.requestPermission();
+  // await NotificationService.init();
+  // await flutterLocalNotificationsPlugin
+  //     .resolvePlatformSpecificImplementation<
+  //     AndroidFlutterLocalNotificationsPlugin>()
+  //     ?.createNotificationChannel(channel);
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -34,33 +43,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      height = MediaQuery.of(context).size.height;
-      width = MediaQuery.of(context).size.width;
-
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    return Sizer(builder: (context, orientation, deviceType) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        // title: 'Pulparambil Golds',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.transparent),
           useMaterial3: true,
         ),
         home: Splash(),
       );
-    } catch (e, stackTrace) {
-      if (kDebugMode) {
-        print('Error in build method: $e');
-        print(stackTrace);
-      }
-      // Optionally, you can return a fallback UI here
-      return MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: Text('An error occurred'),
-          ),
-        ),
-      );
-    }
+    });
   }
 }
-
